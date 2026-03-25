@@ -1,0 +1,126 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "steal money for brainrot",
+    LoadingTitle = "by botakhubs",
+    LoadingSubtitle = "Scripts loaded",
+    ConfigurationSaving = {
+        Enabled = false,
+    },
+    Discord = {
+        Enabled = false,
+    },
+    KeySystem = false,
+})
+
+-- Tabs
+local MainTab = Window:CreateTab("Auto & Upgrades", nil)
+local TeleportTab = Window:CreateTab("Teleports", nil)
+local PlayerTab = Window:CreateTab("Player Settings", nil)
+
+-- MAIN TAB (Upgrades & Rebirths)
+MainTab:CreateButton({
+    Name = "upragegrabs",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("UpgradeGrab"):FireServer()
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "rebirth",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("Rebirth"):FireServer()
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "up speed 1",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("UpgradeSpeed"):FireServer("Upgrade1")
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "speed up 5",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("UpgradeSpeed"):FireServer("Upgrade5")
+    end,
+})
+
+MainTab:CreateButton({
+    Name = "up speed 10",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("UpgradeSpeed"):FireServer("Upgrade10")
+    end,
+})
+
+-- TELEPORT TAB (Instant CFrames)
+TeleportTab:CreateButton({
+    Name = "instant",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = CFrame.new(50, 22.5, -21.4411659)
+        end
+    end,
+})
+
+TeleportTab:CreateButton({
+    Name = "Tp end zones",
+    Callback = function()
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = CFrame.new(51, 5.1704998, -3826.90137)
+        end
+    end,
+})
+
+-- PLAYER TAB (Mods & Movement)
+PlayerTab:CreateToggle({
+    Name = "Instant Interact (No Lag)",
+    CurrentValue = false,
+    Flag = "InstantInteract",
+    Callback = function(Value)
+        _G.InstantInteract = Value
+        local ProximityPromptService = game:GetService("ProximityPromptService")
+        ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
+            if _G.InstantInteract then
+                prompt.HoldDuration = 0
+            end
+        end)
+    end,
+})
+
+PlayerTab:CreateSlider({
+    Name = "Walkspeed",
+    Range = {1, 900},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "WalkspeedSlider",
+    Callback = function(Value)
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = Value
+        end
+    end,
+})
+
+local InfJumpEnabled = false
+PlayerTab:CreateToggle({
+    Name = "Infjump",
+    CurrentValue = false,
+    Flag = "InfJump",
+    Callback = function(Value)
+        InfJumpEnabled = Value
+    end,
+})
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if InfJumpEnabled then
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChildOfClass("Humanoid") then
+            char:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end
+    end
+end)
